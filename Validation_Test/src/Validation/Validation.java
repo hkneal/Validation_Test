@@ -1,13 +1,5 @@
 package Validation;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
-
 public class Validation {
 	/*
 	 * 1. Only orders that have values for the fields of ‘broker’, ‘symbol’, ‘type’,

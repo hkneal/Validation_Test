@@ -1,14 +1,14 @@
 package Validation;
 
-//import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Broker {
 	String name = "";
-	Date previousOrder = new Date();
 	int orderCount = 0;
+	ArrayList<LocalDateTime> previousOrderTimes = new ArrayList<LocalDateTime>(3);
 	public static final int maxOrders = 3;
 	Set<Integer> usedOrderIds = new HashSet<Integer>();
 	
@@ -22,9 +22,26 @@ public class Broker {
 		return this.name;
 	}
 	
-	Date getLastOrder() {
+	Boolean checkPreviousOrders(LocalDateTime orderTimestamp) {
 		//returns the date time stamp of the last valid order for this broker
-		return this.previousOrder;
+		boolean added = false;
+		if(this.orderCount < 3) {
+			this.previousOrderTimes.add(orderTimestamp);
+			this.orderCount++;
+			added = true;
+		}
+		else {
+			for(int i=0; i<3; i++) {
+				//Assuming we didn't span more than 1 hour, else we'll check to be sure the minute passed is within the same hour/day
+				if( orderTimestamp.getMinute() - this.previousOrderTimes.get(i).getMinute() > 1 ) {
+					this.previousOrderTimes.set(i, orderTimestamp);
+					added = true;
+					break;
+					}	
+				}
+			}
+		return added;
+		
 	}
 	
 	Boolean checkOrderId(Integer orderId) {
