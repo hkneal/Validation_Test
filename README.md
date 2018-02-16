@@ -12,3 +12,5 @@ Import and execute this project from Eclipse
 
 # Output
 The console window lists the location of two output .txt files, one for valid orders, and one for invalid orders.  You may need to refresh your project window (function F5 key) to see the output files in the package explorer project pane.  The files are stored in Validation_Test/Files folder.  
+
+Two JSON output files are also generated: one with a list of valid transaction and one with a listing of all invalid transactions.
