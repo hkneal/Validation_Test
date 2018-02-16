@@ -31,6 +31,7 @@ public class Validation {
 		
 		HelperClass.generateOutput();
 		
+		HelperClass.generateOutputJSON();
 		
 	}
 }

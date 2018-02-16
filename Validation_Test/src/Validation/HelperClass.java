@@ -15,6 +15,7 @@ class HelperClass {
 	public static ArrayList<Order> orderList = new ArrayList<Order>();	
 	public static ArrayList<Order> validOrders = new ArrayList<Order>();
 	public static ArrayList<Order> invalidOrders = new ArrayList<Order>();
+	public static String invalidOrderStr = "";
 	
 	public static void generateStockSets() {
 		//Creates a SET of valid trading symbols and valid brokers
@@ -75,13 +76,14 @@ class HelperClass {
 			    else {
 			    		//Add order to invalid List
 			    		invalidCount++;
-			    		//invalidOrders.add(elements);
-			    		System.out.println();
-			    		System.out.print("Invalid Order: "); 
+			    		
+			    		//System.out.print("Invalid Order: "); 
 			    			for(int i=0; i<elements.length; i++) {
-			    				System.out.print(elements[i] + " ");
+			    				//System.out.print(elements[i] + " ");
+			    				invalidOrderStr += elements[i] + " ";
 			    			}
-			    		System.out.print("\n");
+			    		invalidOrderStr += "\n";
+			    		//System.out.print("\n");
 			    		}
 		    
 		    }
@@ -129,6 +131,10 @@ class HelperClass {
 				//add order to invalid list
 			}
 		}
+		for(@SuppressWarnings("unused") Order order : validOrders) {
+			validCount ++;
+		}
+		
 //		for(Order order : validOrders) {
 //			validCount ++;
 //			System.out.print(order.orderTimeStamp + " ");
@@ -169,6 +175,51 @@ class HelperClass {
 	        for(Order order : invalidOrders) {
 	        		writer.write(order.broker + " " + order.sequenceID + "\n");
 	        }
+	        writer.write("\n");
+	        writer.write("Orders invalid for insufficient data: \n");
+	        writer.write(invalidOrderStr);
+	    } catch (IOException e) {
+	        e.printStackTrace(); 
+	    } finally {
+	        if (writer != null) try { writer.close(); } catch (IOException ignore) {}
+	    }
+	    System.out.printf("File is located at %s%n", invalidfile.getAbsolutePath());
+	}
+	
+	public static void generateOutputJSON() {
+		//Outputs the valid and invalid transaction order files
+		File validfile = new File("Files/valid_orders.JSON");
+		File invalidfile = new File("Files/invalid_orders.JSON");
+	    FileWriter writer = null;
+	    try {
+	        writer = new FileWriter(validfile);
+	        writer.write("{\n");
+	        writer.write("\"orders\": [\n");
+	        for(Order order : validOrders) {
+	        		writer.write("{\"time-stamp\": " + "\"" + order.orderTimeStamp + "\", \"broker-name\": " + "\"" + order.broker + "\", \"sequence-id\": " + "\"" + order.sequenceID + "\", \"order-type\": \"" + order.type + "\", \"symbol\": " + "\"" + order.symbol + "\", \"quantity\": \"" + order.quantity + "\", \"price\": " + "\"" + order.price + "\", \"side\": \"" + order.side + "\""+ "}\n");
+	        }
+	        writer.write("]\n");
+	        writer.write("}");
+	    } catch (IOException e) {
+	        e.printStackTrace(); 
+	    } finally {
+	        if (writer != null) try { writer.close(); } catch (IOException ignore) {}
+	    }
+	    System.out.printf("File is located at %s%n", validfile.getAbsolutePath());
+	    
+	    //invalid orders
+	    try {
+	        writer = new FileWriter(invalidfile);
+	        writer.write("{\n");
+	        writer.write("\"orders\": [\n");
+	        for(Order order : invalidOrders) {
+	        	writer.write("{\"time-stamp\": " + "\"" + order.orderTimeStamp + "\", \"broker-name\": " + "\"" + order.broker + "\", \"sequence-id\": " + "\"" + order.sequenceID + "\", \"order-type\": \"" + order.type + "\", \"symbol\": " + "\"" + order.symbol + "\", \"quantity\": \"" + order.quantity + "\", \"price\": " + "\"" + order.price + "\", \"side\": \"" + order.side + "\""+ "}\n");
+		        }
+	        writer.write("]\n");
+	        writer.write("}");
+	        writer.write("\n");
+	        writer.write("Orders invalid for insufficient data: \n");
+	        writer.write(invalidOrderStr);
 	    } catch (IOException e) {
 	        e.printStackTrace(); 
 	    } finally {
