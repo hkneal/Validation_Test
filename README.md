@@ -9,3 +9,6 @@ Import and execute this project from Eclipse
 3) From the Import Projects window Select the "Select Archive File:" radio button
 4) Click "Browse" and navigate to the .zip Archive File "Archive.zip"-> click Open-> click FINISH
 5) Once the project has been imported into Eclipse Highlight the "Validation_Test" project and click Run->Run from the Eclipse menu.
+
+# Output
+The console window list the location of two output .txt files, one for valid orders, and one for invalid orders.  You may need to refresh your project window (function F5 key) to see the output files in the package explorer project pane.  The files are stored in Validation_Test/Files folder.  
