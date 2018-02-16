@@ -16,7 +16,7 @@
 *.jar
 *.war
 *.ear
-*.zip
+#*.zip Allowing .zip for special occasion
 *.tar.gz
 *.rar
 

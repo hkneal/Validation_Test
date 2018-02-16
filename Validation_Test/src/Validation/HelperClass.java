@@ -2,6 +2,8 @@ package Validation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -13,9 +15,9 @@ class HelperClass {
 	public static ArrayList<Order> orderList = new ArrayList<Order>();	
 	public static ArrayList<Order> validOrders = new ArrayList<Order>();
 	public static ArrayList<Order> invalidOrders = new ArrayList<Order>();
+	
 	public static void generateStockSets() {
-		
-		
+		//Creates a SET of valid trading symbols and valid brokers
 		File file = new File("Files/symbols.txt");
 		try {
 
@@ -51,6 +53,7 @@ class HelperClass {
 	}
 	
 	public static void createValidList() {
+		//Reads the order transaction file and separates invalid orders
 		File file = new File("Files/trades.csv");
 		int invalidCount = 0;
 		int validCount = 0;
@@ -126,19 +129,52 @@ class HelperClass {
 				//add order to invalid list
 			}
 		}
-		for(Order order : validOrders) {
-			validCount ++;
-			System.out.print(order.orderTimeStamp + " ");
-			System.out.print(order.broker + " ");
-			System.out.print(order.sequenceID + " ");
-			System.out.print(order.type + " ");
-			System.out.print(order.getSymbol() + " ");
-			System.out.print(order.quantity + " ");
-			System.out.print(order.price + " ");
-			System.out.print(order.side + " \n");
-		}
+//		for(Order order : validOrders) {
+//			validCount ++;
+//			System.out.print(order.orderTimeStamp + " ");
+//			System.out.print(order.broker + " ");
+//			System.out.print(order.sequenceID + " ");
+//			System.out.print(order.type + " ");
+//			System.out.print(order.getSymbol() + " ");
+//			System.out.print(order.quantity + " ");
+//			System.out.print(order.price + " ");
+//			System.out.print(order.side + " \n");
+//		}
 		System.out.println("Total Order Count: " + totalCount  + " Valid Order Count: " + validCount + " Invalid Order Count: " + invalidCount);
 		System.out.println("Sum of valid and invalid: " + (invalidCount + validCount));
+	}
+	
+	public static void generateOutput() {
+		//Outputs the valid and invalid transaction order files
+		File validfile = new File("Files/valid_orders.txt");
+		File invalidfile = new File("Files/invalid_orders.txt");
+	    FileWriter writer = null;
+	    try {
+	        writer = new FileWriter(validfile);
+	        writer.write("Broker : SequenceID \n");
+	        for(Order order : validOrders) {
+	        		writer.write(order.broker + " " + order.sequenceID + "\n");
+	        }
+	    } catch (IOException e) {
+	        e.printStackTrace(); 
+	    } finally {
+	        if (writer != null) try { writer.close(); } catch (IOException ignore) {}
+	    }
+	    System.out.printf("File is located at %s%n", validfile.getAbsolutePath());
+	    
+	    //invalid orders
+	    try {
+	        writer = new FileWriter(invalidfile);
+	        writer.write("Broker : SequenceID \n");
+	        for(Order order : invalidOrders) {
+	        		writer.write(order.broker + " " + order.sequenceID + "\n");
+	        }
+	    } catch (IOException e) {
+	        e.printStackTrace(); 
+	    } finally {
+	        if (writer != null) try { writer.close(); } catch (IOException ignore) {}
+	    }
+	    System.out.printf("File is located at %s%n", invalidfile.getAbsolutePath());
 	}
 	
 } /*** end of helperClass **/

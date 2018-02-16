@@ -11,20 +11,8 @@ public class Validation {
 	 * be accepted.
 	 */
 
-	void checkFields() {
-		// This method splits the list between valid and invalid orders based on
-		// required fields
-		// And creates Broker objects or Hashmap while running validateSymbol and
-		// checkTimestamps methods
-
-	}
-
-	void checkTimeStamps() {
-
-	}
-
 	public static void main(String[] args) {
-		//1st calls a helper class to generate a set of valid stock symbols & a set of valid Broker objects
+		//Generate a set of valid stock symbols & a set of valid Broker objects
 		HelperClass.generateStockSets();
 		
 		//Test to make sure proper Broker ArrayList has been generated.
@@ -35,12 +23,14 @@ public class Validation {
 		//Test if order id is unique
 		//System.out.println(HelperClass.brokerList.get(0).checkOrderId(1));
 		//System.out.println(HelperClass.brokerList.get(0).checkOrderId(1));
+		
+		//Test to validate the ticker symbol against list of proper symbols
+		//System.out.println(HelperClass.validateSymbol("YLLW"));
 
 		HelperClass.createValidList();
 		
-		//Used to validate the ticker symbol
-		//System.out.println(HelperClass.validateSymbol("YLLW"));
+		HelperClass.generateOutput();
 		
-		//System.out.println(HelperClass.isPalindrome("AlanalA"));
+		
 	}
 }
