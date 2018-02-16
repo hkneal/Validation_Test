@@ -6,5 +6,6 @@ Import and execute this project from Eclipse
 
 1) From Eclipse select FILE->IMPORT... 
 2) Expand the GENERAL tab then Select "Existing Projects into Workspace"->NEXT 
-3) From the Import Projects window Select the "Select Archive File:" radial 
-4) Click "Browse" and navigate to the .zip Archive File "/Validation_Test/Archive.zip"
+3) From the Import Projects window Select the "Select Archive File:" radio button
+4) Click "Browse" and navigate to the .zip Archive File "Archive.zip"-> click Open-> click FINISH
+5) Once the project has been imported into Eclipse Highlight the "Validation_Test" project and click Run->Run from the Eclipse menu.
