@@ -1,0 +1,77 @@
+Broker : SequenceID 
+Ameriprise Financial 1
+Charles Schwab 2
+Edward Jones 4
+Wells Fargo Advisors 4
+Fidelity 4
+LPL Financial 4
+AXA Advisors 4
+Raymond James Financial 4
+TD Ameritrade 4
+National Planning Corporation 4
+TD Ameritrade 6
+Ameriprise Financial 7
+Wells Fargo Advisors 7
+Wells Fargo Advisors 9
+Ameriprise Financial 9
+Wells Fargo Advisors 13
+Edward Jones 11
+Charles Schwab 12
+Edward Jones 12
+TD Ameritrade 12
+Raymond James Financial 12
+AXA Advisors 12
+LPL Financial 12
+National Planning Corporation 12
+Wells Fargo Advisors 15
+Fidelity 12
+National Planning Corporation 13
+Wells Fargo Advisors 19
+Wells Fargo Advisors 22
+National Planning Corporation 15
+Wells Fargo Advisors 24
+AXA Advisors 16
+Fidelity 18
+Edward Jones 18
+Wells Fargo Advisors 28
+TD Ameritrade 20
+Charles Schwab 21
+Wells Fargo Advisors 35
+Wells Fargo Advisors 36
+AXA Advisors 22
+Fidelity 23
+Wells Fargo Advisors 39
+National Planning Corporation 25
+TD Ameritrade 27
+Wells Fargo Advisors 46
+Wells Fargo Advisors 48
+Wells Fargo Advisors 52
+Wells Fargo Advisors 57
+Wells Fargo Advisors 58
+Wells Fargo Advisors 61
+Wells Fargo Advisors 63
+Ameriprise Financial 30
+Wells Fargo Advisors 67
+Wells Fargo Advisors 68
+LPL Financial 32
+LPL Financial 33
+LPL Financial 34
+Fidelity 32
+Edward Jones 32
+Charles Schwab 33
+Ameriprise Financial 33
+TD Ameritrade 33
+Raymond James Financial 33
+AXA Advisors 33
+National Planning Corporation 33
+Wells Fargo Advisors 74
+Wells Fargo Advisors 78
+Wells Fargo Advisors 80
+National Planning Corporation 37
+Raymond James Financial 39
+Wells Fargo Advisors 85
+LPL Financial 42
+Ameriprise Financial 44
+AXA Advisors 46
+AXA Advisors 47
+Edward Jones 49

@@ -1,29 +1,101 @@
 package Validation;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
-public class Order {
-	LocalDateTime orderTimeStamp = null;
-	String broker = "";
-	String symbol = "";
-	String type = "";
-	int quantity;
-	String side = "";
-	int sequenceID;
-	float price;
+public class Order { 
+	public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy HH:mm:ss");
+	private final LocalDateTime ORDER_TIME_STAMP;
+	private final String BROKER, SYMBOL, TYPE, SIDE;
+	private final int QUANTITY, SEQUENCE_ID;
+	private final float PRICE;
+	private final String[] orderEntries;
+	private final boolean FULL_ORDER; //Used to determine if all parameters were supplied
 
-	Order(LocalDateTime orderTimeStamp, String broker, int sequenceID, String type, String symbol, int quantity, float price, String side){
-		this.orderTimeStamp = orderTimeStamp;
-		this.broker = broker;
-		this.symbol = symbol;
-		this.type = type;
-		this.side = side;
-		this.sequenceID = sequenceID;
-		this.quantity = quantity;
-		this.price = price;
+	//constructor
+	Order(LocalDateTime ORDER_TIME_STAMP, String BROKER, int SEQUENCE_ID, String TYPE, String SYMBOL, int QUANTITY, float PRICE, String SIDE){
+		this.ORDER_TIME_STAMP = ORDER_TIME_STAMP;
+		this.BROKER = BROKER;
+		this.SYMBOL = SYMBOL;
+		this.TYPE = TYPE;
+		this.SIDE = SIDE;
+		this.SEQUENCE_ID = SEQUENCE_ID;
+		this.QUANTITY = QUANTITY;
+		this.PRICE = PRICE;
+		this.FULL_ORDER = true;
+		this.orderEntries = null;
 	}
 	
-	String getSymbol(){
-		return this.symbol;
+	Order(LocalDateTime ORDER_TIME_STAMP, String BROKER, int SEQUENCE_ID, String[] orderEntries){
+		this.orderEntries = orderEntries;
+		this.ORDER_TIME_STAMP = ORDER_TIME_STAMP;
+		this.BROKER = BROKER;
+		this.SYMBOL = null;
+		this.TYPE = null;
+		this.SIDE = null;
+		this.SEQUENCE_ID = SEQUENCE_ID;
+		this.QUANTITY = 0;
+		this.PRICE = 0;
+		this.FULL_ORDER = false;
+	}
+	
+	//getters and setters
+	public String[] getOrderEntries() {
+		return this.orderEntries;
+	}
+	
+	public LocalDateTime getTimeStamp(){
+		return this.ORDER_TIME_STAMP;
+	}
+	
+	public String getSYMBOL(){
+		return this.SYMBOL;
+	}
+	
+	public String getBROKER(){
+		return this.BROKER;
+	}
+	
+	public String getTYPE(){
+		return this.TYPE;
+	}
+	
+	public String getSIDE(){
+		return this.SIDE;
+	}
+	
+	public int getQUANTITY(){
+		return this.QUANTITY;
+	}
+	
+	public int getSEQUENCE_ID(){
+		return this.SEQUENCE_ID;
+	}
+	
+	public float getPRICE(){
+		return this.PRICE;
+	}
+	
+	public boolean getFullOrder(){
+		return this.FULL_ORDER;
+	}
+	
+	public boolean validateOrder(ArrayList<Broker> brokerList) {
+		boolean orderValid = false;
+		for(Broker broker: brokerList) {
+			if(broker.getName().equals(this.BROKER)) {
+				//System.out.println("Found Broker: " + broker.name);
+				//check if sequence id is valid
+				if(broker.checkOrderId(this.SEQUENCE_ID)) {
+					//check number of orders on broker that are within the last minute 
+					if(broker.checkPreviousOrders(this.ORDER_TIME_STAMP)) {
+						//add time stamp to broker array 
+						orderValid = true;
+						}
+					}
+				}
+			}
+		return orderValid;
 	}
 }

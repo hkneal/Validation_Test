@@ -6,24 +6,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Broker {
-	String name = "";
-	int orderCount = 0;
+	private String name;
+	private int orderCount;
 	ArrayList<LocalDateTime> previousOrderTimes = new ArrayList<LocalDateTime>(3);
 	public static final int maxOrders = 3;
 	Set<Integer> usedOrderIds = new HashSet<Integer>();
 	
-	Broker(String name){
+	public Broker(String name){
 		//sets the name of this broker object to a string name
 		this.name = name;
 	}
 	
-	String getName(){
+	public String getName(){
 		//returns the name of this broker
 		return this.name;
 	}
 	
 	Boolean checkPreviousOrders(LocalDateTime orderTimestamp) {
-		//returns the date time stamp of the last valid order for this broker
+		//returns boolean if order isn't third within an hour, it checks the date time stamp of the last valid order for this broker
 		boolean added = false;
 		if(this.orderCount < 3) {
 			this.previousOrderTimes.add(orderTimestamp);
