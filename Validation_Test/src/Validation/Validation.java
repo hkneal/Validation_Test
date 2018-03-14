@@ -22,13 +22,11 @@ public class Validation {
 	 * id's repeat for the same broker, only the first message with a given id should
 	 * be accepted.
 	 */
-	public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy HH:mm:ss");
-	static Set<String> stockSet = new HashSet<String>();
-	public static ArrayList<Broker> brokerList = new ArrayList<Broker>();
-	public static ArrayList<Order> orderList = new ArrayList<Order>();	
-	public static ArrayList<Order> validOrders = new ArrayList<Order>();
-	public static ArrayList<Order> invalidOrders = new ArrayList<Order>();
-	public static String invalidOrderStr = "";
+	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy HH:mm:ss");
+	private static Set<String> stockSet = new HashSet<String>();
+	private static ArrayList<Broker> brokerList = new ArrayList<Broker>();
+	private static ArrayList<Order> validOrders = new ArrayList<Order>();
+	private static ArrayList<Order> invalidOrders = new ArrayList<Order>();
 
 	public static void main(String[] args) throws IOException {
 		//Generate a set of valid stock symbols & a set of valid Broker objects

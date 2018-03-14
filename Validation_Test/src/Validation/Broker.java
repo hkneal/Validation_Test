@@ -8,9 +8,8 @@ import java.util.Set;
 public class Broker {
 	private String name;
 	private int orderCount;
-	ArrayList<LocalDateTime> previousOrderTimes = new ArrayList<LocalDateTime>(3);
-	public static final int maxOrders = 3;
-	Set<Integer> usedOrderIds = new HashSet<Integer>();
+	private ArrayList<LocalDateTime> previousOrderTimes = new ArrayList<LocalDateTime>(3);
+	private Set<Integer> usedOrderIds = new HashSet<Integer>();
 	
 	public Broker(String name){
 		//sets the name of this broker object to a string name
@@ -22,7 +21,7 @@ public class Broker {
 		return this.name;
 	}
 	
-	Boolean checkPreviousOrders(LocalDateTime orderTimestamp) {
+	public Boolean checkPreviousOrders(LocalDateTime orderTimestamp) {
 		//returns boolean if order isn't third within an hour, it checks the date time stamp of the last valid order for this broker
 		boolean added = false;
 		if(this.orderCount < 3) {
@@ -44,7 +43,7 @@ public class Broker {
 		
 	}
 	
-	Boolean checkOrderId(Integer orderId) {
+	public Boolean checkOrderId(Integer orderId) {
 		//returns false if the order id for this broker has been used already
 		return this.usedOrderIds.add(orderId);
 	}

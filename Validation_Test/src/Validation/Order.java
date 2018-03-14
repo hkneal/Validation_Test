@@ -83,19 +83,19 @@ public class Order {
 	
 	public boolean validateOrder(ArrayList<Broker> brokerList) {
 		boolean orderValid = false;
-		for(Broker broker: brokerList) {
-			if(broker.getName().equals(this.BROKER)) {
-				//System.out.println("Found Broker: " + broker.name);
-				//check if sequence id is valid
-				if(broker.checkOrderId(this.SEQUENCE_ID)) {
-					//check number of orders on broker that are within the last minute 
-					if(broker.checkPreviousOrders(this.ORDER_TIME_STAMP)) {
-						//add time stamp to broker array 
-						orderValid = true;
-						}
-					}
+		
+		//Pull valid broker by name and validate sequence Id's used and last 3 time stamps for needed broker
+		Broker orderBroker = brokerList.stream()
+				.filter((b) -> this.BROKER.equals(b.getName()))
+				.findAny()
+				.orElse(null);
+	
+		//Validate a proper sequence id is being used,
+		//check number of orders on broker that are within the last minute And
+		if(orderBroker.checkOrderId(this.SEQUENCE_ID) && orderBroker.checkPreviousOrders(this.ORDER_TIME_STAMP)) {
+				orderValid = true;
 				}
-			}
+		
 		return orderValid;
 	}
 }
