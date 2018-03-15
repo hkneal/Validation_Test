@@ -23,4 +23,5 @@ Refractering to reduce nested loops and complexity
 3) Changed to FileInputStream, - TODO move to BufferedReader (DONE, 3/14/18) 
 
 TODO - Add Unit Tests
+
 TODO - Generate the output .txt and .json files as part of read process.
