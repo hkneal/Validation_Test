@@ -20,6 +20,6 @@ Refractering to reduce nested loops and complexity
 
 1) Moved order validation requirements testing into Order Class and eliminated nesting loops
 2) Removed Helper Class, moved it's validation code into Validation Class
-3) Changed to FileInputStream, - TODO move to BufferedInputStream 
+3) Changed to FileInputStream, - TODO move to BufferedReader (DONE, 3/14/18) 
 
-TODO - Write to output text as part of input read process, AND/OR use Stream and Filter on valid/invalid order lists to generate the output .txt and .json files.
+TODO - Generate the output .txt and .json files as part of read process.
