@@ -22,4 +22,5 @@ Refractering to reduce nested loops and complexity
 2) Removed Helper Class, moved it's validation code into Validation Class
 3) Changed to FileInputStream, - TODO move to BufferedReader (DONE, 3/14/18) 
 
+TODO - Add Unit Tests
 TODO - Generate the output .txt and .json files as part of read process.
