@@ -85,16 +85,36 @@ public class Order {
 		boolean orderValid = false;
 		
 		//Pull valid broker by name and validate sequence Id's used and last 3 time stamps for needed broker
-		Broker orderBroker = brokerList.stream()
-				.filter((b) -> this.BROKER.equals(b.getName()))
-				.findAny()
-				.orElse(null);
-	
+//		Broker orderBroker = brokerList.stream()
+//				.filter((b) -> this.BROKER.equals(b.getName()))
+//				.findAny()
+//				.orElse(null);
+		
 		//Validate a proper sequence id is being used,
 		//check number of orders on broker that are within the last minute And
-		if(orderBroker.checkOrderId(this.SEQUENCE_ID) && orderBroker.checkPreviousOrders(this.ORDER_TIME_STAMP)) {
-				orderValid = true;
+//		try {
+//			if(orderBroker.checkOrderId(this.SEQUENCE_ID) && orderBroker.checkPreviousOrders(this.ORDER_TIME_STAMP)) {
+//					orderValid = true;
+//					}
+//		} catch (NullPointerException e) {
+//			//Invalid Broker Name, sequence_Id, or orderTimeStamp on orderBroker, return with false valid order validation
+//		}
+		
+// Traditional method seems to run about 10% quicker in this implementation
+		loop: for(Broker broker: brokerList) {
+			if(broker.getName().equals(this.BROKER)) {
+				Broker orderBroker = broker;
+				try {
+					if(orderBroker.checkOrderId(this.SEQUENCE_ID) && orderBroker.checkPreviousOrders(this.ORDER_TIME_STAMP)) {
+							orderValid = true;
+							return true;
+						}
+				} catch (NullPointerException e) {
+					//Invalid Broker Name, sequence_Id, or orderTimeStamp on orderBroker, return with false valid order validation
 				}
+				break loop;
+			}
+		}
 		
 		return orderValid;
 	}

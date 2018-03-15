@@ -1,15 +1,15 @@
 package Validation;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Scanner;
 import java.util.Set;
 
 public class Validation {
@@ -22,6 +22,7 @@ public class Validation {
 	 * id's repeat for the same broker, only the first message with a given id should
 	 * be accepted.
 	 */
+	
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy HH:mm:ss");
 	private static Set<String> stockSet = new HashSet<String>();
 	private static ArrayList<Broker> brokerList = new ArrayList<Broker>();
@@ -29,6 +30,9 @@ public class Validation {
 	private static ArrayList<Order> invalidOrders = new ArrayList<Order>();
 
 	public static void main(String[] args) throws IOException {
+		//Measure Elapse Time 
+		long startTimeStamp = System.currentTimeMillis();
+		
 		//Generate a set of valid stock symbols & a set of valid Broker objects
 		generateStockSets();
 		
@@ -38,7 +42,6 @@ public class Validation {
 		//}
 		
 		//Test if order id is unique
-		//System.out.println(brokerList.get(0).checkOrderId(1));
 		//System.out.println(brokerList.get(0).checkOrderId(1));
 		
 		//Test to validate the ticker symbol against list of proper symbols
@@ -53,37 +56,44 @@ public class Validation {
 		//Allow the objects to be marked for garbage collection!
 		cleanObjects();
 		
+		//Ending of main logic time stamp 
+		long endTimeStamp = System.currentTimeMillis();
+		
+		//Simple elapsed time measurement
+		System.out.print("Total Elapsed Time in Milliseconds: ");
+		System.out.print(endTimeStamp - startTimeStamp);
 	}
 	
 	public static void generateStockSets() {
-		//Creates a SET of valid trading symbols and valid brokers
-		File file = new File("Files/symbols.txt");
+		//Creates a SET of valid trading symbols and valid list of brokers 
+		//File file = new File("Files/symbols.txt");
+		
 		try {
 
-			Scanner sc = new Scanner(file);
-
-			while (sc.hasNextLine()) {
-				stockSet.add(sc.next());
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("Files/symbols.txt")));
+			
+			String line;
+			while ((line = br.readLine()) != null) {
+				stockSet.add(line);
 			}
-			sc.close();
-		} catch (FileNotFoundException e) {
+			br.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		 //System.out.println(stockSet);
-		
-		File brokerFile = new File("Files/firms.txt");
 		try {
 
-			Scanner sc = new Scanner(brokerFile);
-
-			while (sc.hasNextLine()) {
-				brokerList.add(new Broker(sc.nextLine()));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("Files/firms.txt")));
+			
+			String line;
+			while ((line = br.readLine()) != null) {
+				brokerList.add(new Broker(line));
 			}
-			sc.close();
-		} catch (FileNotFoundException e) {
+			br.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	public static boolean validateSymbol(String symbol){
@@ -93,82 +103,68 @@ public class Validation {
 	
 	public static void createValidList() throws IOException {
 		//Reads the order transaction file and separates invalid orders
-		int totalCount = 0, sequenceId = 0, quantity = 0; //Don't like setting seqId and quantity to 0
+		int totalCount = 0, sequenceId = 0, quantity = 0; 
 		LocalDateTime orderTimeStamp = null;
 		String broker = null, type = null, symbol = null, side = null;
-		float price = 0; //Need to fix this as well, don't like setting to 0
-		
-		FileInputStream fileStream = null;
-		Scanner sc = null;
+		float price = 0; 
+
 		try {
-			//Separate the input file data by comma
-			fileStream = new FileInputStream("Files/trades.csv");
-			sc = new Scanner(fileStream, "UTF-8");
-			
-			//Skip the column titles
-			sc.nextLine(); 
-			
-			while (sc.hasNextLine()) {
-				totalCount++;
-				String line = sc.nextLine();
-			    String[] elements = line.split(",");
-			    
-			    //Validate order elements
-			    if(elements.length == 8) {
-			    	//Sufficient number for order parameters is 8
-			    		try {
-			    			orderTimeStamp = LocalDateTime.parse(elements[0], formatter);
-			    			broker = elements[1];
-			    			sequenceId = Integer.parseInt(elements[2]);
-			    			type = elements[3];
-			    			symbol = elements[4];
-			    			quantity = Integer.parseInt(elements[5]);
-			    			price = Float.parseFloat(elements[6]);
-			    			side = elements[7];
-			    		} catch (Exception e) {
-			    			e.printStackTrace();
-			    		}
+				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("Files/trades.csv")));
+				//Skip the column titles
+				br.readLine(); 
+				
+				String line;
+				
+				while ((line = br.readLine()) != null) {
+					totalCount++;
+					
+					//Order parameters are separated by comma
+					String[] elements = line.split(",");
+
+				    //Validate order elements
+				    if(elements.length == 8) {
+				    	
+				    	//Sufficient number of order parameters is 8
+		    			orderTimeStamp = LocalDateTime.parse(elements[0], formatter);
+		    			broker = elements[1];
+		    			sequenceId = Integer.parseInt(elements[2]);
+		    			type = elements[3];
+		    			symbol = elements[4];
+		    			quantity = Integer.parseInt(elements[5]);
+		    			price = Float.parseFloat(elements[6]);
+		    			side = elements[7];
+				    		
 			    		Order newOrder = new Order(orderTimeStamp, broker, sequenceId, type, symbol, quantity, price, side);
 					    //Execute Order Validation
 					    	if(!validateSymbol(newOrder.getSYMBOL())) {
+					    		//Write to invalid text file instead of array list
 					    		invalidOrders.add(newOrder);
 					    }
 					    	else if(!newOrder.validateOrder(brokerList)) {
 					    			invalidOrders.add(newOrder);					    		
 					    		}
 					    	else {
+					    		//Write to valid text file instead of array list
 					    		validOrders.add(newOrder);
 					    	}
-			    }
-			    else {
-			    		//Invalid order due to insufficient number of parameters, push this to invalid order list
-			    	try {
-		    			orderTimeStamp = LocalDateTime.parse(elements[0], formatter);
-		    			broker = elements[1];
-		    			sequenceId = Integer.parseInt(elements[2]);
-		    			
-		    			//Assumption is that only the side of order is missing or other parameter past sequenceID
-
-		    		} catch (Exception e) {
-		    			e.printStackTrace();
-		    		}
-			    		Order newOrder = new Order(orderTimeStamp, broker, sequenceId, elements);
-			    		invalidOrders.add(newOrder);
-			    }
+				    }  
+				    else {  //less than 8 parameters
+				    	
+				    		//Invalid order due to insufficient number of parameters, push this to invalid order list
+			    			orderTimeStamp = LocalDateTime.parse(elements[0], formatter);
+			    			broker = elements[1];
+			    			sequenceId = Integer.parseInt(elements[2]);
+			    			
+			    			//Assumption is that only the side of order is missing or other parameter past sequenceID
+				    		Order newOrder = new Order(orderTimeStamp, broker, sequenceId, elements);
+				    		invalidOrders.add(newOrder);
+				    }
+				}  //end of while
+				br.close();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			//Scanner suppresses exceptions
-			if(sc.ioException() != null) {
-				throw sc.ioException();
-			}
-			
-			} finally {
-			    if (fileStream != null) {
-			        fileStream.close();
-			    }
-			    if (sc != null) {
-			        sc.close();
-			    }
-			} 
 
 		System.out.println("Total Order Count: " + totalCount  + " Valid Order Count: " + validOrders.size() + " Invalid Order Count: " + invalidOrders.size());
 		System.out.println("Sum of valid and invalid: " + (invalidOrders.size() + validOrders.size()));
@@ -217,7 +213,7 @@ public class Validation {
 	        writer.write("{\n");
 	        writer.write("\"orders\": [\n");
 	        for(Order order : validOrders) {
-	        		writer.write("{\"time-stamp\": " + "\"" + order.getTimeStamp() + "\", \"broker-name\": " + "\"" + order.getBROKER() + "\", \"sequence-id\": " + "\"" + order.getSEQUENCE_ID() + "\", \"order-type\": \"" + order.getTYPE() + "\", \"symbol\": " + "\"" + order.getSYMBOL() + "\", \"quantity\": \"" + order.getQUANTITY() + "\", \"price\": " + "\"" + order.getPRICE() + "\", \"side\": \"" + order.getSIDE() + "\""+ "},\n");
+	        		writer.write("{\"time-stamp\": " + "\"" + order.getTimeStamp().format(formatter) + "\", \"broker-name\": " + "\"" + order.getBROKER() + "\", \"sequence-id\": " + "\"" + order.getSEQUENCE_ID() + "\", \"order-type\": \"" + order.getTYPE() + "\", \"symbol\": " + "\"" + order.getSYMBOL() + "\", \"quantity\": \"" + order.getQUANTITY() + "\", \"price\": " + "\"" + order.getPRICE() + "\", \"side\": \"" + order.getSIDE() + "\""+ "},\n");
 	        }
 	        writer.write("]\n");
 	        writer.write("}");
@@ -235,13 +231,13 @@ public class Validation {
 	        writer.write("\"orders\": [\n");
 	        for(Order order : invalidOrders) {
 	        		if(order.getFullOrder()) {
-	        			writer.write("{\"time-stamp\": " + "\"" + order.getTimeStamp() + "\", \"broker-name\": " + "\"" + order.getBROKER() + "\", \"sequence-id\": " + "\"" + order.getSEQUENCE_ID() + "\", \"order-type\": \"" + order.getTYPE() + "\", \"symbol\": " + "\"" + order.getSYMBOL() + "\", \"quantity\": \"" + order.getQUANTITY() + "\", \"price\": " + "\"" + order.getPRICE() + "\", \"side\": \"" + order.getSIDE() + "\""+ "},\n");
+	        			writer.write("{\"time-stamp\": " + "\"" + order.getTimeStamp().format(formatter) + "\", \"broker-name\": " + "\"" + order.getBROKER() + "\", \"sequence-id\": " + "\"" + order.getSEQUENCE_ID() + "\", \"order-type\": \"" + order.getTYPE() + "\", \"symbol\": " + "\"" + order.getSYMBOL() + "\", \"quantity\": \"" + order.getQUANTITY() + "\", \"price\": " + "\"" + order.getPRICE() + "\", \"side\": \"" + order.getSIDE() + "\""+ "},\n");
 	        		}
 	        		else {
 	        			String[] orderEntries = order.getOrderEntries();
 	        			String[] orderParameters = {"type", "symbol", "quantity", "price", "side"};
 	        			int orderEntriesLength = orderEntries.length;
-	        			writer.write("{\"time-stamp\": " + "\"" + order.getTimeStamp() + "\", \"broker-name\": " + "\"" + order.getBROKER() + "\", \"sequence-id\": " + "\"" + order.getSEQUENCE_ID() + "\"");
+	        			writer.write("{\"time-stamp\": " + "\"" + order.getTimeStamp().format(formatter) + "\", \"broker-name\": " + "\"" + order.getBROKER() + "\", \"sequence-id\": " + "\"" + order.getSEQUENCE_ID() + "\"");
 	        			for(int i= 3; i< orderEntriesLength; i++) {
 	        				writer.write(", \"" + orderParameters[i-3] + "\": \"" + orderEntries[i] + "\"");
 	        			}
